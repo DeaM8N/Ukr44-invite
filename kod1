@@ -1,0 +1,114 @@
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram import types # Убедитесь, что эта строка есть для использования types.CallbackQuery
+
+@dp.message(Command("start"))
+async def start(message: Message):
+    main_menu_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="О Ukr44", callback_data="about_ukr44")],
+        [InlineKeyboardButton(text="Как стать участником?", callback_data="how_to_join")],
+        [InlineKeyboardButton(text="Контакты", callback_data="contacts_info")],
+        [InlineKeyboardButton(text="Образование и развитие", callback_data="education_menu")],
+        [InlineKeyboardButton(text="Помощь и поддержка", callback_data="support_menu")],
+        [InlineKeyboardButton(text="Сообщество и события", callback_data="community_menu")]
+    ])
+    await message.answer("Привет! Это Ukr44 Бот. Выберите, что вас интересует:", reply_markup=main_menu_keyboard)
+
+# --- Обработчики для кнопок главного меню ---
+
+@dp.callback_query(lambda c: c.data == 'about_ukr44')
+async def process_about_ukr44(callback_query: types.CallbackQuery):
+    await callback_query.message.answer("Ukr44 — это сообщество для украинских переселенцев в Галле (Заале), которое помогает адаптироваться, обучаться и найти своё место в Германии. Наша цель — ваша самореализация и финансовая стабильность.")
+    await callback_query.answer() # Убирает "часики" с кнопки после нажатия
+
+@dp.callback_query(lambda c: c.data == 'how_to_join')
+async def process_how_to_join(callback_query: types.CallbackQuery):
+    await callback_query.message.answer("Чтобы присоединиться к Ukr44 и стать частью нашего проекта, заполните небольшую анкету. Это поможет нам лучше понять ваши потребности и предложить подходящие программы. Напишите команду /start, чтобы начать процесс заполнения анкеты (она же включает ваше имя и навыки).")
+    await callback_query.answer()
+
+@dp.callback_query(lambda c: c.data == 'contacts_info')
+async def process_contacts_info(callback_query: types.CallbackQuery):
+    # Здесь можно добавить реальные контактные данные
+    await callback_query.message.answer(
+        "Наши контакты:\n"
+        "📞 **Телефон:** [ваш номер телефона, например, +49 123 4567890]\n"
+        "📧 **Email:** [ваш email, например, ukr44.halle@email.de]\n"
+        "🌐 **Вебсайт:** [если есть, например, www.ukr44.de]\n"
+        "📍 **Адрес:** [если есть физический офис или место встреч, например, Musterstrasse 1, 06108 Halle (Saale)]"
+    )
+    await callback_query.answer()
+
+@dp.callback_query(lambda c: c.data == 'education_menu')
+async def process_education_menu(callback_query: types.CallbackQuery):
+    education_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Курсы немецкого языка", callback_data="german_courses")],
+        [InlineKeyboardButton(text="Финансовая грамотность", callback_data="financial_literacy")],
+        [InlineKeyboardButton(text="Развитие карьеры и трудоустройство", callback_data="career_development")]
+    ])
+    await callback_query.message.answer("Выберите раздел:", reply_markup=education_keyboard)
+    await callback_query.answer()
+
+@dp.callback_query(lambda c: c.data == 'support_menu')
+async def process_support_menu(callback_query: types.CallbackQuery):
+    support_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Помощь с жильём", callback_data="housing_support")],
+        [InlineKeyboardButton(text="Социальная поддержка", callback_data="social_support")],
+        [InlineKeyboardButton(text="Практическая помощь и экспресс-питание", callback_data="practical_help")]
+    ])
+    await callback_query.message.answer("Выберите раздел:", reply_markup=support_keyboard)
+    await callback_query.answer()
+
+@dp.callback_query(lambda c: c.data == 'community_menu')
+async def process_community_menu(callback_query: types.CallbackQuery):
+    community_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Предстоящие события", callback_data="upcoming_events")],
+        [InlineKeyboardButton(text="Наши истории успеха", callback_data="success_stories")],
+        [InlineKeyboardButton(text="Обсуждения и обмен опытом", callback_data="discussions")]
+    ])
+    await callback_query.message.answer("Выберите раздел:", reply_markup=community_keyboard)
+    await callback_query.answer()
+
+# --- Обработчики для кнопок подменю (пример) ---
+
+@dp.callback_query(lambda c: c.data == 'german_courses')
+async def process_german_courses(callback_query: types.CallbackQuery):
+    await callback_query.message.answer(
+        "**Курсы немецкого языка Ukr44:**\n"
+        "Мы предлагаем интенсивные курсы немецкого языка для всех уровней, от A1 до B1 и выше. Наши преподаватели используют современные методики, чтобы вы быстро освоили язык для повседневного общения и профессиональной деятельности.\n\n"
+        "📝 **Что вас ждёт:**\n"
+        "- Групповые и индивидуальные занятия.\n"
+        "- Разговорные клубы для практики.\n"
+        "- Подготовка к экзаменам.\n\n"
+        "👉 Чтобы записаться или узнать расписание, свяжитесь с нами через раздел 'Контакты' или следите за новостями в 'Предстоящих событиях'."
+    )
+    await callback_query.answer()
+
+@dp.callback_query(lambda c: c.data == 'financial_literacy')
+async def process_financial_literacy(callback_query: types.CallbackQuery):
+    await callback_query.message.answer(
+        "**Финансовая грамотность с Ukr44:**\n"
+        "Понимание немецкой финансовой системы — ключ к вашей стабильности. Наши курсы охватывают:\n"
+        "- Открытие банковского счета и управление им.\n"
+        "- Налоговая система Германии.\n"
+        "- Основы сбережений и разумных инвестиций.\n"
+        "- Планирование личного бюджета.\n\n"
+        "🎯 **Наша цель** — помочь вам стать финансово независимыми и уверенными в завтрашнем дне."
+    )
+    await callback_query.answer()
+
+@dp.callback_query(lambda c: c.data == 'career_development')
+async def process_career_development(callback_query: types.CallbackQuery):
+    await callback_query.message.answer(
+        "**Развитие карьеры и трудоустройство:**\n"
+        "Мы активно помогаем участникам Ukr44 найти работу в Германии. Наши программы включают:\n"
+        "- **Составление резюме и мотивационных писем** по немецким стандартам.\n"
+        "- **Подготовка к собеседованиям** и тренировочные интервью.\n"
+        "- **Профориентация** и помощь в выборе перспективной сферы.\n"
+        "- **Поиск актуальных вакансий** и контакты с работодателями.\n\n"
+        "Мы верим, что каждый найдёт работу по душе и своим способностям!"
+    )
+    await callback_query.answer()
+
+# --- ВАЖНО: Ниже должен идти ваш существующий код обработки анкеты и запуск бота ---
+# @dp.message() async def process(message: Message): ...
+# async def main(): ...
+# if __name__ == "__main__": ...
